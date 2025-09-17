@@ -1,6 +1,6 @@
 // src/App.js
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import './App.css';
 import { quizData } from './QuizData';
 import Quiz from './Quiz';
@@ -10,6 +10,19 @@ function App() {
     const [userAnswers, setUserAnswers] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [score, setScore] = useState(0);
+
+    // 1. Randomize questions only once when the component mounts
+    const shuffledQuizData = useMemo(() => {
+        // Fisher-Yates (aka Knuth) Shuffle algorithm
+        const array = [...quizData];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }, []);
+
+    const totalQuestions = shuffledQuizData.length;
 
     const handleAnswerChange = (questionIndex, answer) => {
         setUserAnswers({
@@ -21,7 +34,7 @@ function App() {
     const handleSubmit = (event) => {
         event.preventDefault();
         let newScore = 0;
-        quizData.forEach((question, index) => {
+        shuffledQuizData.forEach((question, index) => {
             if (userAnswers[index] === question.correctAnswer) {
                 newScore++;
             }
@@ -34,21 +47,22 @@ function App() {
         setUserAnswers({});
         setIsSubmitted(false);
         setScore(0);
+        // Note: The questions will remain in the same shuffled order for this session.
+        // A full page refresh is needed to get a new random order.
     };
 
     return (
         <div className="App">
             <header className="App-header">
                 <h1>Ceisteanna: Slánuimhir, Réadach, Dáta agus Carachtar</h1>
-                <p>Freagair na 100 ceist thíos.</p>
+                <p>Freagair na {totalQuestions} ceist thíos.</p>
             </header>
             <main className="quiz-container">
                 {isSubmitted ? (
-                    <Results score={score} totalQuestions={quizData.length} onRetry={handleRetry} />
+                    <Results score={score} totalQuestions={totalQuestions} onRetry={handleRetry} />
                 ) : null}
-
                 <form onSubmit={handleSubmit}>
-                    {quizData.map((question, index) => (
+                    {shuffledQuizData.map((question, index) => (
                         <Quiz
                             key={index}
                             question={question}

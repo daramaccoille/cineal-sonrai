@@ -33,10 +33,24 @@
   text-align: left;
 }
 
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 .question-text {
   color: #333;
   font-size: 1.2rem;
-  margin-bottom: 15px;
+  margin: 0; /* Remove default margin */
+  flex-grow: 1;
+}
+
+.answer-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .answer-select {
@@ -52,16 +66,27 @@
 
 /* Combo box styles for correct/incorrect answers */
 .answer-select.correct-answer {
-  border: 2px solid green;
+  border-color: #2e7d32;
+  background-color: #e8f5e9;
 }
 
 .answer-select.incorrect-answer {
-  border: 2px solid salmon;
+  border-color: #c62828;
+  background-color: #ffebee;
 }
 
-/* Styling for the options inside the select */
-select option {
-  background-color: white;
+.feedback-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+.feedback-icon.correct {
+  color: #2e7d32; /* Dark Green */
+}
+
+.feedback-icon.incorrect {
+  color: #c62828; /* Dark Red */
 }
 
 .submit-button {

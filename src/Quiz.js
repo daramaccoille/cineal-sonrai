@@ -14,27 +14,32 @@ const Quiz = ({ question, onAnswerChange, selectedAnswer, isSubmitted }) => {
 
     return (
         <div className="question-container">
-            <h3 className="question-text">{question.question}</h3>
-            <select
-                className={`answer-select ${selectClassName()}`}
-                onChange={onAnswerChange}
-                value={selectedAnswer || ''}
-                disabled={isSubmitted}
-            >
-                <option value="" disabled>Roghnaigh do fhreagra</option> {/* Choose your answer */}
-                {question.options.map((option, index) => (
-                    <option
-                        key={index}
-                        value={option}
-                        style={{
-                            backgroundColor: isSubmitted && option === question.correctAnswer ? 'lightgreen' :
-                                isSubmitted && option === selectedAnswer && option !== question.correctAnswer ? 'salmon' : 'white'
-                        }}
-                    >
-                        {option}
-                    </option>
-                ))}
-            </select>
+            <div className="question-header">
+                <h3 className="question-text">{question.question}</h3>
+                {isSubmitted && (
+                    <span className={isCorrect ? 'feedback-icon correct' : 'feedback-icon incorrect'}>
+                        {isCorrect ? '✓' : '✗'}
+                    </span>
+                )}
+            </div>
+            <div className="answer-wrapper">
+                <select
+                    className={`answer-select ${selectClassName()}`}
+                    onChange={onAnswerChange}
+                    value={selectedAnswer || ''}
+                    disabled={isSubmitted}
+                >
+                    <option value="" disabled>Roghnaigh do fhreagra</option> {/* Choose your answer */}
+                    {question.options.map((option, index) => (
+                        <option
+                            key={index}
+                            value={option}
+                        >
+                            {option}
+                        </option>
+                    ))}
+                </select>
+            </div>
         </div>
     );
 };
